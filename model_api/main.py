@@ -1,11 +1,9 @@
 import ollama
 import logging
-import json
-import yaml
 import uvicorn
 
 from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from datetime import datetime
@@ -52,7 +50,8 @@ app = FastAPI(
     version="1.0.0",
     description="Ollama RESTful API",
     lifespan=lifespan,
-    docs_url=None,  # 禁用預設 docs
+    docs_url=None,          # 禁用預設 docs
+    redoc_url=None,        # 禁用預設 redoc
 )
 
 # cors
