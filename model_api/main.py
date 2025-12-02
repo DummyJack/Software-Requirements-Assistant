@@ -7,7 +7,7 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from datetime import datetime
-from routes import api_router
+from routes import model_api_router
 
 # global variables
 API_PORT = 6000
@@ -107,7 +107,7 @@ async def health_check():
         raise HTTPException(status_code=500, detail="Health check failed")
 
 # routes
-app.include_router(api_router, prefix="/api/v1")
+app.include_router(model_api_router, prefix="/api/v1")
 
 # custom 404
 @app.exception_handler(404)

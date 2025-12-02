@@ -40,7 +40,7 @@ $startTime = Get-Date
 Write-Host "開始時間: $($startTime.ToString('HH:mm:ss'))" -ForegroundColor Gray
 Write-Host ""
 
-# 同時發送兩個請求（背景執行）
+# 同時發送兩個請求
 Write-Host "發送請求 1 (mistral)..." -ForegroundColor Cyan
 $job1 = Start-Job -ScriptBlock {
     param($body)
@@ -52,6 +52,20 @@ $job1 = Start-Job -ScriptBlock {
         response = $response.response
     }
 } -ArgumentList $body1
+
+Write-Host ""
+Write-Host "等待請求 1 完成..." -ForegroundColor Yellow
+Write-Host ""
+
+Wait-Job $job1 | Out-Null
+
+# 取得結果
+$result1 = Receive-Job $job1
+
+Write-Host ""
+Write-Host "  完成時間: $($result1.time.ToString('HH:mm:ss.fff'))"
+Write-Host "  回應: $($result1.response.Substring(0, [Math]::Min(100, $result1.response.Length)))..."
+Write-Host ""
 
 Write-Host "發送請求 2 (llama3.2)..." -ForegroundColor Cyan
 $job2 = Start-Job -ScriptBlock {
@@ -66,15 +80,18 @@ $job2 = Start-Job -ScriptBlock {
 } -ArgumentList $body2
 
 Write-Host ""
-Write-Host "等待兩個請求完成..." -ForegroundColor Yellow
+Write-Host "等待請求 2 完成..." -ForegroundColor Yellow
 Write-Host ""
 
-# 等待兩個請求完成
-Wait-Job $job1, $job2 | Out-Null
+Wait-Job $job2 | Out-Null
 
 # 取得結果
-$result1 = Receive-Job $job1
 $result2 = Receive-Job $job2
+
+Write-Host ""
+Write-Host "  完成時間: $($result2.time.ToString('HH:mm:ss.fff'))"
+Write-Host "  回應: $($result2.response.Substring(0, [Math]::Min(100, $result2.response.Length)))..."
+Write-Host ""
 
 # 清理 job
 Remove-Job $job1, $job2
@@ -82,18 +99,6 @@ Remove-Job $job1, $job2
 $endTime = Get-Date
 Write-Host "結束時間: $($endTime.ToString('HH:mm:ss'))" -ForegroundColor Gray
 Write-Host "總耗時: $(($endTime - $startTime).TotalSeconds) 秒" -ForegroundColor Gray
-Write-Host ""
-
-# 顯示結果
-Write-Host "=== 結果 ===" -ForegroundColor Green
-Write-Host ""
-Write-Host "請求 1 (mistral):" -ForegroundColor Cyan
-Write-Host "  完成時間: $($result1.time.ToString('HH:mm:ss.fff'))"
-Write-Host "  回應: $($result1.response.Substring(0, [Math]::Min(100, $result1.response.Length)))..."
-Write-Host ""
-Write-Host "請求 2 (llama3.2):" -ForegroundColor Cyan
-Write-Host "  完成時間: $($result2.time.ToString('HH:mm:ss.fff'))"
-Write-Host "  回應: $($result2.response.Substring(0, [Math]::Min(100, $result2.response.Length)))..."
 Write-Host ""
 
 Write-Host "=== 測試完成 ===" -ForegroundColor Cyan
