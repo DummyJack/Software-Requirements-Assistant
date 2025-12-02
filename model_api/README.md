@@ -47,20 +47,6 @@ model_api/
 .\test_api.ps1
 ```
 
-## API Doc
-
-Step 1: 安裝
-
-```bash
-npm install -g redoc-cli
-```
-
-Step 2: 產生 html (swagger.yml --> apiDoc.html)
-
-```
-redoc-cli build -o apiDoc.html swagger.yml
-```
-
 ## TODO
 <!-- - [ ] or - [X] -->
 - [ ] 是否加上 API key

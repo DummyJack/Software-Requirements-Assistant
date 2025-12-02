@@ -28,11 +28,7 @@ class CompletionResponse(BaseModel):
 
 @router.post("/completion", response_model=CompletionResponse, summary="生成")
 async def create_completion(request: CompletionRequest):
-    """
-    文本生成（支援排隊機制）
-    - 一次只執行一個模型請求
-    - 如有其他請求在執行中，會自動排隊等待
-    """
+    # 一次只執行一個模型請求，如有其他請求在執行中，會自動排隊等待
     async with model_lock:
         try:
             logger.info(f"開始執行 - 模型: {request.model}")

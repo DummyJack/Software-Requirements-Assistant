@@ -25,7 +25,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# 生命週期管理
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global model_available, AVAILABLE_MODELS
@@ -46,12 +45,12 @@ async def lifespan(app: FastAPI):
     logger.info("API server closed")
 
 app = FastAPI(
-    title="Ollama Models API",
+    title="Local Models API",
     version="1.0.0",
-    description="Ollama RESTful API",
+    description="RESTful API",
     lifespan=lifespan,
-    docs_url=None,          # 禁用預設 docs
-    redoc_url=None,        # 禁用預設 redoc
+    docs_url=None,    # 禁用預設 docs
+    redoc_url=None,   # 禁用預設 redoc
 )
 
 # cors
